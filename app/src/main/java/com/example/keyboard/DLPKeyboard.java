@@ -2,6 +2,7 @@ package com.example.keyboard;
 
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
@@ -12,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputConnection;
 
 import java.io.File;
@@ -24,12 +26,33 @@ public class DLPKeyboard extends InputMethodService implements KeyboardView.OnKe
 
     private  boolean isCaps = false;
 
+    Context context;
+
 
     //Press Ctrl+O
+
+    public class ShowAlert{
+
+        public ShowAlert(String str) {
+
+            AlertDialog alertDialog = new AlertDialog.Builder(context)
+                    .setTitle("Warning")
+                    .setMessage("Sensitive Information Found").setCancelable(true)
+                    .create();
+
+            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            //alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL);
+            alertDialog.show();
+
+        }
+    }
 
 
     @Override
     public View onCreateInputView() {
+
+        context = getApplicationContext();
+
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard,null);
         keyboard = new Keyboard(this,R.xml.qwerty);
         kv.setKeyboard(keyboard);
@@ -50,9 +73,9 @@ public class DLPKeyboard extends InputMethodService implements KeyboardView.OnKe
     @Override
     public void onKey(int i, int[] ints) {
 
-       // AlertDialog.Builder Sinfo= new AlertDialog.Builder(this);
+       // ShowAlertDialog.Builder Sinfo= new ShowAlertDialog.Builder(this);
        //  Sinfo.setMessage("Sensitive data inserted").setCancelable(true);
-       // AlertDialog alert= Sinfo.create();
+       // ShowAlertDialog alert= Sinfo.create();
        // alert.setTitle("Alert");
        // alert.show();
 
@@ -70,6 +93,7 @@ public class DLPKeyboard extends InputMethodService implements KeyboardView.OnKe
                 break;
             case Keyboard.KEYCODE_DONE:
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER));
+                //Log.d("keyTag","clicked");
                 break;
             default:
                 char code = (char)i;

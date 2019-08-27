@@ -3,8 +3,10 @@ package com.example.keyboard;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.AlertDialog;
+import android.util.Log;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 public class MyAccessibilityService extends AccessibilityService {
 
@@ -21,19 +23,25 @@ public class MyAccessibilityService extends AccessibilityService {
         eventText = eventText + event.getText();
 
         if(eventText.equals("Typed: [brayan]")) {
-            System.out.println("Your name is");
+            //System.out.println("Your name is");
+            Log.d("keyTag","Your name is");
 
-            AlertDialog alertDialog = new AlertDialog.Builder(this)
+/*
+            AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext())
                     .setTitle("Warning")
                     .setMessage("Sensitive Information Found").setCancelable(true)
                     .create();
 
             alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            alertDialog.show();
+            //alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL);
+            alertDialog.show();*/
+
+            Toast.makeText(getApplicationContext(), "Warning Sensitive information found", Toast.LENGTH_LONG).show();
 
         }
         else {
-            System.out.println("ACCESSIBILITY SERVICE : " + eventText);
+            //System.out.println("ACCESSIBILITY SERVICE : " + eventText);
+            Log.d("keyTag",eventText);
         }
     }
 
@@ -44,10 +52,12 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @Override
     protected void onServiceConnected() {
+
         AccessibilityServiceInfo info = getServiceInfo();
         info.eventTypes = AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED;
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_SPOKEN;
         info.notificationTimeout = 100;
         this.setServiceInfo(info);
+
     }
 }
